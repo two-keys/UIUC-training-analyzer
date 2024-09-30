@@ -1,8 +1,8 @@
 /**
  * Loads in a json file.
  */
-function loadJson() {
-    var trainings = require('../../public/data/trainings (correct).json');
+function loadJson(path = '../../public/data/trainings (correct).json') {
+    var trainings = require(path);
 
     return trainings;
 }

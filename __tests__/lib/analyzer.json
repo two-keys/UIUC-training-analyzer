@@ -1,0 +1,47 @@
+[
+    {
+        "name": "Antony Sanchez",
+        "completions": [
+            {
+                "name": "Coding in Javascript",
+                "timestamp": "07/31/2022",
+                "expires": null
+            },
+            {
+                "name": "Oracle Database Fundamentals",
+                "timestamp": "04/05/2022",
+                "expires": null
+            }
+        ]
+    }, 
+    {
+        "name": "John Doe",
+        "completions": [
+            {
+                "name": "Using Hazardous Chemicals in an Animal Care Facility",
+                "timestamp": "8/19/2023",
+                "expires": "8/18/2024"
+            },
+            {
+                "name": "Coding in C#",
+                "timestamp": "03/21/2024",
+                "expires": "03/20/2025"
+            }
+        ]
+    }, 
+    {
+        "name": "Mary Jane",
+        "completions": [
+            {
+                "name": "Coding in Javascript",
+                "timestamp": "08/21/2024",
+                "expires": null
+            }, 
+            {
+                "name": "Coding in Javascript",
+                "timestamp": "08/21/2023",
+                "expires": null
+            }
+        ]
+    }
+]
