@@ -27,42 +27,94 @@ function getFiscalYear(timestamp) {
 }
 
 /**
- * Counts the latest completion for all trainings.
+ * 
+ * @param subject 
+ * @param comparedTo 
+ * @returns true if subject is after comparedTo
+ */
+function isAfter(subject, comparedTo) {
+    let date1 = new Date(subject);
+    let date2 = new Date(comparedTo);
+
+    if (date1.getTime() > date2.getTime()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Gets training blobs for further processing
  * @param inputFile The JSON file to analyze.
  */
-function getCompletionCounts(inputFile) {
+function getTrainingBlobs(inputFile) {
     var trainingBlobs = [];
 
     // iterate over userBlobs
     inputFile.forEach((userBlob) => {
-        let userTrainings = [];
-
         // look at user's completions
-        userBlob.completions.forEach((cBlob) => {
-            // check that this training has not already been processed for user
-            let userTrainIndex = userTrainings.findIndex((ut) => ut == cBlob.name);
-
-            if(userTrainIndex == -1) {
-                userTrainings.push(cBlob.name);
-
-                // check if completion already exists in trainingBlobs
-                let blobIndex = trainingBlobs.findIndex((tBlob) => tBlob.name == cBlob.name);
-
-                if(blobIndex != -1) {
-                    // increment by one
-                    trainingBlobs[blobIndex].completions++;
-                } else {
-                    // create new trainingBlob
-                    trainingBlobs.push({
-                        name: cBlob.name,
-                        completions: 1
-                    });
-                }
+        userBlob.completions.forEach((cBlob, cIndex) => {
+            // check if the training already exists in trainingBlobs
+            let trainingIndex = trainingBlobs.findIndex((tBlob) => tBlob.name == cBlob.name);
+            if(trainingIndex == -1) {
+                // create new trainingBlob
+                let newLength = trainingBlobs.push({
+                    name: cBlob.name, // training name
+                    users: []
+                });
+                trainingIndex = newLength - 1;
             }
+
+            // look for user's index in training blob
+            let users = trainingBlobs[trainingIndex].users;
+            let userIndex = users.findIndex(
+                (ub) => {
+                    // console.log(`${ub.name}, ${userBlob.name}`)
+                    return ub.name == userBlob.name;
+                }
+            );
+            if(userIndex == -1) {
+                // create new user
+                let newLength = trainingBlobs[trainingIndex].users.push({
+                    name: userBlob.name, // user name
+                    latestCompletionIndex: 0,
+                    completions: []
+                });
+                userIndex = newLength - 1;
+            }
+
+            let userComBlob = {
+                fiscalYear: getFiscalYear(cBlob.timestamp),
+                timestamp: cBlob.timestamp,
+                expires: cBlob.expires
+            };
+            users[userIndex].completions.push(userComBlob);
+
+            // update latest index
+            let oldTimestampIndex = users[userIndex].latestCompletionIndex;
+            let oldTimestamp = users[userIndex].completions[oldTimestampIndex].timestamp;
+            if (isAfter(cBlob.timestamp, oldTimestamp)) {
+                users[userIndex].latestCompletionIndex = cIndex;
+            };
         });
     });
 
     return trainingBlobs;
+}
+
+/**
+ * Counts the latest completion for all trainings.
+ * @param inputFile The JSON file to analyze.
+ */
+function getCompletionCounts(inputFile) {
+    var trainingBlobs = getTrainingBlobs(inputFile);
+
+    return trainingBlobs.map((tBlob) => {
+        return {
+            name: tBlob.name,
+            completions: tBlob.users.length
+        }
+    });
 }
 
 /**
