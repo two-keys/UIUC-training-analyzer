@@ -4,12 +4,12 @@
         "completions": [
             {
                 "name": "Coding in Javascript",
-                "timestamp": "07/31/2022",
+                "timestamp": "7/31/2022",
                 "expires": null
             },
             {
                 "name": "Oracle Database Fundamentals",
-                "timestamp": "04/05/2022",
+                "timestamp": "4/5/2022",
                 "expires": null
             }
         ]
@@ -24,8 +24,8 @@
             },
             {
                 "name": "Coding in C#",
-                "timestamp": "03/21/2024",
-                "expires": "03/20/2025"
+                "timestamp": "3/21/2024",
+                "expires": "3/20/2025"
             }
         ]
     }, 
@@ -34,12 +34,12 @@
         "completions": [
             {
                 "name": "Coding in Javascript",
-                "timestamp": "08/21/2024",
+                "timestamp": "8/21/2024",
                 "expires": null
             }, 
             {
                 "name": "Coding in Javascript",
-                "timestamp": "08/21/2023",
+                "timestamp": "8/21/2023",
                 "expires": null
             }
         ]
