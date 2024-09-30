@@ -24,7 +24,25 @@ describe('File loading', () => {
 
         expect(firstUser.name).toBe('Antony Sanchez');
     });
-})
+});
+
+describe('Fiscal Year function', () => {
+    let dateMap = [
+        ["1/1/2005", "2005"],
+        ["5/9/2005", "2005"],
+        ["5/29/2005", "2005"],
+        ["6/30/2005", "2005"],
+        ["7/1/2005", "2006"],
+        ["1/30/2007", "2007"],
+        ["9/2/2018", "2019"],
+        ["12/1/2020", "2021"],
+        ["12/22/2020", "2021"]
+    ]
+    test.each(dateMap)('%s should be in FY %s', (timestamp, fiscalYear) => {
+        let calcFiscalYear = analyzer.getFiscalYear(timestamp);
+        expect(calcFiscalYear).toBe(fiscalYear);
+    });
+});
 
 describe('Completion count', () => {
     // jest doesnt easily allow custom error messages, so we're wrapping everything in an each

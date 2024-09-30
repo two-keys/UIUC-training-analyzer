@@ -8,6 +8,25 @@ function loadJson(path = '../../public/data/trainings (correct).json') {
 }
 
 /**
+ * 
+ * @param timestamp M/D/YYYY
+ * @returns YYYY, where year n is betwen 7/1/n-1 - 6/30/n
+ */
+function getFiscalYear(timestamp) {
+    let pieces = timestamp.split("/");
+    let month = parseInt(pieces[0]); // 9/_/____
+    let day = parseInt(pieces[1]); // _/12/____
+    let year = parseInt(pieces[2]); // _/_/2021
+    var fiscalYear = year;
+
+    // months cannot be greater than 12
+    if(month >= 7) {
+        fiscalYear = year + 1;
+    }
+    return fiscalYear.toString();
+}
+
+/**
  * Counts the latest completion for all trainings.
  * @param inputFile The JSON file to analyze.
  */
@@ -63,5 +82,5 @@ function getExpiredCompletions(inputFile) {
 }
 
 module.exports = {
-    loadJson, getCompletionCounts
+    loadJson, getFiscalYear, getCompletionCounts
 };
