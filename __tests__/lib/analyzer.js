@@ -1,10 +1,16 @@
 const analyzer = require('../../src/lib/analyzer');
 
-const testDataPath = '../../__tests__/lib/analyzer.json';
+var trainingJson, testJson;
+
+// initialize
+beforeAll(() => {
+    trainingJson = analyzer.loadJson();
+
+    const testDataPath = '../../__tests__/lib/analyzer.json';
+    testJson = analyzer.loadJson(testDataPath);
+});
 
 test('Can read training json file', () => {
-    var trainingJson = analyzer.loadJson();
-
     // should be Jaelyn
     let firstUser = trainingJson[0];
 
@@ -12,10 +18,8 @@ test('Can read training json file', () => {
 });
 
 test('Can read test data json file', () => {
-    var trainingJson = analyzer.loadJson(testDataPath);
-
     // should be Antony Sanchez
-    let firstUser = trainingJson[0];
+    let firstUser = testJson[0];
 
     expect(firstUser.name).toBe('Antony Sanchez');
 });
