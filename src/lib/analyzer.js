@@ -101,6 +101,8 @@ function getTrainingBlobs(inputFile) {
         // look at user's completions
         userBlob.completions.forEach((cBlob, cIndex) => {
             let trainingIndex = findOrCreateTrainingBlob(cBlob.name);
+
+            let users = trainingBlobs[trainingIndex].users;
             let userIndex = findOrCreateUserBlob(userBlob.name, trainingIndex);
 
             let userComBlob = {
@@ -140,9 +142,37 @@ function getCompletionCounts(inputFile) {
 /**
  * Creates a list of people that completed specified training(s).
  * @param inputFile The JSON file to analyze.
+ * @param {Array} trainings The JSON file to analyze.
+ * @param {String} fiscalYear The JSON file to analyze.
  */
-function getUserCompletions(inputFile, trainings, fiscalYear) {
-    // TODO
+function getFYCompletions(inputFile, trainings, fiscalYear) {
+    var trainingBlobs = getTrainingBlobs(inputFile);
+    let filteredBlobs = [];
+
+    trainingBlobs.forEach((tBlob) => {
+        if(trainings.includes(tBlob.name)) {
+            // find people with FY completions
+            let filteredPeople = tBlob.users.filter((uBlob) => {
+                let hasFYCompletion = uBlob.completions.findIndex((cBlob) =>
+                    cBlob.fiscalYear == fiscalYear
+                );
+                return hasFYCompletion != -1;
+            }).map((uBlob) => {
+                // we only need their names
+                return uBlob.name;
+            });
+            console.log(filteredPeople.length);
+
+            let tempFilterBlob = {
+                name: tBlob.name,
+                people: filteredPeople
+            }
+            filteredBlobs.push(tempFilterBlob);
+        }
+    });
+
+    // console.log(filteredBlobs);
+    return filteredBlobs;
 }
 
 /**
@@ -154,5 +184,5 @@ function getExpiredCompletions(inputFile) {
 }
 
 module.exports = {
-    loadJson, getFiscalYear, getCompletionCounts
+    loadJson, getFiscalYear, getCompletionCounts, getFYCompletions
 };

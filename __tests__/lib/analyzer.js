@@ -38,10 +38,50 @@ describe('Fiscal Year function', () => {
         ["12/1/2020", "2021"],
         ["12/22/2020", "2021"]
     ]
+
+    let fiscalYearMap = [
+        ["2024", [ // filter
+            "Coding in C#", "Using Hazardous Chemicals in an Animal Care Facility"
+        ]],
+        ["2022", [
+            "Oracle Database Fundamentals"
+        ]],
+    ]
+
     test.each(dateMap)('%s should be in FY %s', (timestamp, fiscalYear) => {
         let calcFiscalYear = analyzer.getFiscalYear(timestamp);
         expect(calcFiscalYear).toBe(fiscalYear);
     });
+
+    test.each(fiscalYearMap)('FY %s should contain our filtered entries', (fiscalYear, trainings) => {
+        const leftIncludesRight = (leftArr, rightArr) => {
+            let leftHasRight = true;
+            rightArr.forEach((value) => {
+                if(!leftArr.includes(value))
+                    leftHasRight = false;
+            });
+            return leftHasRight;
+        }
+
+        let fiscalYearComps = analyzer.getFYCompletions(
+            testJson, trainings, fiscalYear
+        ).map(
+            (tBlob) => tBlob.name
+        );
+
+        // calculated vales should include our WHOLE answer key
+        expect(leftIncludesRight(fiscalYearComps, trainings)).toBe(true);
+        // our answer key should include the calculated values
+        expect(leftIncludesRight(trainings, fiscalYearComps)).toBe(true);
+    });
+
+    test('Coding in Javascript should only have two names', () => {
+        let fiscalYearComps = analyzer.getFYCompletions(
+            testJson, ["Coding in Javascript"], '2023'
+        );
+
+        expect(fiscalYearComps[0].people.length).toBe(2);
+    })
 });
 
 describe('Completion count', () => {

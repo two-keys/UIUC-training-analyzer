@@ -34,12 +34,22 @@
         "completions": [
             {
                 "name": "Coding in Javascript",
+                "timestamp": "8/21/2022",
+                "expires": null
+            }, 
+            {
+                "name": "Coding in Javascript",
                 "timestamp": "8/21/2024",
                 "expires": null
             }, 
             {
                 "name": "Coding in Javascript",
                 "timestamp": "8/21/2023",
+                "expires": null
+            },
+            {
+                "name": "Filler Training",
+                "timestamp": "8/20/2023",
                 "expires": null
             }
         ]
