@@ -48,40 +48,60 @@ function isAfter(subject, comparedTo) {
  * @param inputFile The JSON file to analyze.
  */
 function getTrainingBlobs(inputFile) {
+    /**
+     * Returns the index of a training, creating it if not already accounted for.
+     * @param {string} name
+     * @returns trainingIndex
+     */
+    const findOrCreateTrainingBlob = (name) => {
+        // check if the training already exists in trainingBlobs
+        let trainingIndex = trainingBlobs.findIndex((tBlob) => tBlob.name == name);
+        if(trainingIndex == -1) {
+            // create new trainingBlob
+            let newLength = trainingBlobs.push({
+                name: name, // training name
+                users: []
+            });
+            trainingIndex = newLength - 1;
+        }
+        return trainingIndex;
+    }
+
+    /**
+     * Returns the index of a user within a trainingBlob, creating it if not already accounted for.
+     * @param {string} name
+     * @param {number} trainingIndex index in trainingBlob.users
+     * @returns trainingIndex
+     */
+    const findOrCreateUserBlob = (name, trainingIndex) => {
+        // look for user's index in training blob
+        let users = trainingBlobs[trainingIndex].users;
+        let userIndex = users.findIndex(
+            (ub) => {
+                // console.log(`${ub.name}, ${userBlob.name}`)
+                return ub.name == name;
+            }
+        );
+        if(userIndex == -1) {
+            // create new user
+            let newLength = trainingBlobs[trainingIndex].users.push({
+                name: name, // user name
+                latestCompletionIndex: 0,
+                completions: []
+            });
+            userIndex = newLength - 1;
+        }
+        return userIndex;
+    }
+
     var trainingBlobs = [];
 
     // iterate over userBlobs
     inputFile.forEach((userBlob) => {
         // look at user's completions
         userBlob.completions.forEach((cBlob, cIndex) => {
-            // check if the training already exists in trainingBlobs
-            let trainingIndex = trainingBlobs.findIndex((tBlob) => tBlob.name == cBlob.name);
-            if(trainingIndex == -1) {
-                // create new trainingBlob
-                let newLength = trainingBlobs.push({
-                    name: cBlob.name, // training name
-                    users: []
-                });
-                trainingIndex = newLength - 1;
-            }
-
-            // look for user's index in training blob
-            let users = trainingBlobs[trainingIndex].users;
-            let userIndex = users.findIndex(
-                (ub) => {
-                    // console.log(`${ub.name}, ${userBlob.name}`)
-                    return ub.name == userBlob.name;
-                }
-            );
-            if(userIndex == -1) {
-                // create new user
-                let newLength = trainingBlobs[trainingIndex].users.push({
-                    name: userBlob.name, // user name
-                    latestCompletionIndex: 0,
-                    completions: []
-                });
-                userIndex = newLength - 1;
-            }
+            let trainingIndex = findOrCreateTrainingBlob(cBlob.name);
+            let userIndex = findOrCreateUserBlob(userBlob.name, trainingIndex);
 
             let userComBlob = {
                 fiscalYear: getFiscalYear(cBlob.timestamp),
