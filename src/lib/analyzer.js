@@ -24,6 +24,8 @@ function getCompletionCounts(inputFile) {
             let userTrainIndex = userTrainings.findIndex((ut) => ut == cBlob.name);
 
             if(userTrainIndex == -1) {
+                userTrainings.push(cBlob.name);
+
                 // check if completion already exists in trainingBlobs
                 let blobIndex = trainingBlobs.findIndex((tBlob) => tBlob.name == cBlob.name);
 
