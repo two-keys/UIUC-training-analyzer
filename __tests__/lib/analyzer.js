@@ -84,6 +84,44 @@ describe('Fiscal Year function', () => {
     })
 });
 
+describe('date functions', () => {
+    let stripperDates = [
+        ['Jan 1st, 2022', '1/1/2022'],
+        ['Feb 2nd, 2019', '2/2/2019'],
+        ['Mar 3rd, 2029', '3/3/2029'],
+        ['Sep 9th, 2003', '9/9/2003'],
+        ['Oct 1st, 2023', '10/1/2023']
+    ];
+    let dateMap = [
+        ['09/20/2024', '09/20/2024', 1],
+        ['09/20/2024', '09/19/2024', 0],
+        ['09/20/2024', '01/01/1000', 0],
+        ['09/19/2024','09/20/2024', 2],
+        ['08/19/2024', '09/20/2024', 33]
+    ];
+    let wrongDateMap = [
+        ['09/20/2024', '09/20/2024', 0],
+        ['01/01/1000', '09/20/2024', 0],
+        ['09/19/2024','09/20/2024', 1],
+        ['08/19/2024', '09/20/2024', 10]
+    ];
+
+    test.each(stripperDates)('%s is the same as %s', (ordinal, realDate) => {
+        let ordinalDateObj = new Date(analyzer.dateStripper(ordinal));
+        let realDateObj = new Date(realDate);
+
+        expect(ordinalDateObj.getTime()).toBe(realDateObj.getTime());
+    });
+
+    test.each(dateMap)('%s is after %s with a %i day margin', (subject, comparedTo, margin) => {
+        expect(analyzer.isAfter(subject, comparedTo, margin)).toBe(true);
+    });
+
+    test.each(wrongDateMap)('%s is NOT after %s with a %i day margin', (subject, comparedTo, margin) => {
+        expect(analyzer.isAfter(subject, comparedTo, margin)).toBe(false);
+    });
+});
+
 describe('Completion count', () => {
     // jest doesnt easily allow custom error messages, so we're wrapping everything in an each
     let answerSheet = [

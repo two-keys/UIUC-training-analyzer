@@ -27,14 +27,27 @@ function getFiscalYear(timestamp) {
 }
 
 /**
+ * Strips ordinal suffixes from dates.
+ * @param {string} date M/D/YYYY or MMMM DDD, YYYY
+ * @returns date string 
+ */
+function dateStripper(date) {
+    return date.replace(RegExp("(?<=\\d)(st|nd|rd|th)"), '')
+}
+
+/**
  * 
- * @param subject 
- * @param comparedTo 
+ * @param subject M/D/YYYY or MMMM DDD, YYYY
+ * @param comparedTo M/D/YYYY or MMMM DDD, YYYY
+ * @param {number} margin Number of days to increase subject by. 
  * @returns true if subject is after comparedTo
  */
-function isAfter(subject, comparedTo) {
-    let date1 = new Date(subject);
-    let date2 = new Date(comparedTo);
+function isAfter(subject, comparedTo, margin = 0) {
+    let date1 = new Date(dateStripper(subject));
+    let date2 = new Date(dateStripper(comparedTo));
+
+    let marginInMilliseconds = margin * 24 * 60 * 60 * 1000;
+    date1.setTime(date1.getTime() + marginInMilliseconds);
 
     if (date1.getTime() > date2.getTime()) {
         return true;
@@ -178,11 +191,39 @@ function getFYCompletions(inputFile, trainings, fiscalYear) {
 /**
  * Crates a list of people and only their expired trainings.
  * @param inputFile The JSON file to analyze.
+ * @param {string} targetDate Oct 1st, 2023
  */
-function getExpiredCompletions(inputFile) {
-    // TODO
+function getExpiredCompletions(inputFile, targetDate) {
+    var userBlobs = inputFile;
+
+    const expiryFilter = (cBlob, margin = 30) => {
+        if(typeof cBlob.expires !== 'undefined' && cBlob.expires != null) {
+            // get only people with expired/expiring completions
+            return typeof isAfter(cBlob.expires, targetDate, margin) // 30 day margin
+        }
+        return false;
+    }
+    const strictExpiryFilter = (cBlob) => expiryFilter(cBlob, 0);
+
+    let filteredBlobs = userBlobs.filter((uBlob) => {
+        // get only people with expired/expiring completions
+        let hasExpiredCompletion = uBlob.completions.findIndex(expiryFilter);
+        return hasExpiredCompletion != -1;
+    }).map((uBlob) => {
+        return {
+            name: uBlob.name, // user name
+            completions: uBlob.completions.filter(expiryFilter).map((cBlob) => {
+                return {
+                    name: cBlob.name,
+                    status: (strictExpiryFilter(cBlob)) ? 'expired' : 'expires soon'
+                }
+            })
+        }
+    });
+
+    filteredBlobs.push(tempFilterBlob);
 }
 
 module.exports = {
-    loadJson, getFiscalYear, getCompletionCounts, getFYCompletions
+    loadJson, getFiscalYear, dateStripper, isAfter, getCompletionCounts, getFYCompletions, getExpiredCompletions
 };
