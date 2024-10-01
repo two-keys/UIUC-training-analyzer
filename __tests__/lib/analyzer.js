@@ -183,4 +183,40 @@ describe('Expiration function', () => {
             }
         })
     });
+
+    let userArr = [
+        [
+          'John Doe'
+            , 'Using Hazardous Chemicals in an Animal Care Facility'
+            , [
+                [ 'expired', 'Aug 28th, 2024']
+                , [ 'expired', 'Jan 1st, 2100']
+                , [ 'expires soon', 'Aug 1st, 2024']
+                , [ 'expires soon', 'Aug 18th, 2024']
+            ]
+        ]
+        , [
+          'Mary Jane'
+            , 'Racecar Driving'
+            , [
+                [ 'expired', 'Jan 21st, 2023']
+                , [ 'expired', 'Mar 21st, 2100']
+                , [ 'expires soon', 'Jan 20th, 2023']
+                , [ 'expires soon', 'Jan 1st, 2023']
+            ]
+        ]
+    ];
+    describe.each(userArr)('Status flag for %s -> "%s"', (personName, trainName, tData) => {
+        test.each(tData)(`"${trainName}" should be %s on %s`, (status, targetDate) => {
+            let completions = analyzer
+                .getExpiredCompletions(testJson, targetDate, [personName])[0]
+                .completions;
+            
+            // find training blob
+            let tBlobIndex = completions.findIndex((cBlob) => cBlob.name == trainName);
+            expect(tBlobIndex).not.toBe(-1); // training is recognized as expir(ed/ing)
+
+            expect(completions[tBlobIndex].status).toBe(status);
+        })
+    });
 });
