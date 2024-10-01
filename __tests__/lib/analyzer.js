@@ -123,7 +123,6 @@ describe('date functions', () => {
 });
 
 describe('Completion count', () => {
-    // jest doesnt easily allow custom error messages, so we're wrapping everything in an each
     let answerSheet = [
         ["Coding in Javascript", 2],
         ["Oracle Database Fundamentals", 1],

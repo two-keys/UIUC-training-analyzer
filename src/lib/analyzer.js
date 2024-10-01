@@ -221,7 +221,7 @@ function getExpiredCompletions(inputFile, targetDate) {
         }
     });
 
-    filteredBlobs.push(tempFilterBlob);
+    return filteredBlobs;
 }
 
 module.exports = {

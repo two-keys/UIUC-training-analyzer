@@ -51,6 +51,11 @@
                 "name": "Filler Training",
                 "timestamp": "8/20/2023",
                 "expires": null
+            },
+            {
+                "name": "Racecar Driving",
+                "timestamp": "8/20/2023",
+                "expires": "1/20/2023"
             }
         ]
     }
