@@ -138,3 +138,32 @@ describe('Completion count', () => {
         });
     });
 });
+
+describe('Expiration function', () => {
+    let answerKey = {
+        '01/01/2001': { 
+            'Antony Sanchez': { count: 0 },
+            'John Doe': { count: 2 },
+            'Mary Jane': { count: 1 }
+        }
+    }
+    let answerKeyArray = Object.keys(answerKey).map((aKey) => {
+        return [
+            aKey,
+            Object.keys(answerKey[aKey]).map((pKey) => {
+                return [pKey, answerKey[aKey][pKey].count]
+            })
+        ]
+    });
+
+    describe.each(answerKeyArray)('User expirations for %s', (targetDate, peopleKeyArray) => {
+        test.each(peopleKeyArray)('Expirations for %s should be %i', (personName, count) => {
+            let expComps = analyzer.getExpiredCompletions(testJson, targetDate, [personName]);
+
+            if (count == 0)
+                expect(expComps.length).toBe(0);
+            else
+                expect(expComps[0].completions.length).toBe(count);
+        })
+    });
+});

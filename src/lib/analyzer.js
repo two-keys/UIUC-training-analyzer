@@ -192,8 +192,9 @@ function getFYCompletions(inputFile, trainings, fiscalYear) {
  * Crates a list of people and only their expired trainings.
  * @param inputFile The JSON file to analyze.
  * @param {string} targetDate Oct 1st, 2023
+ * @param {Array<string>} users An optional array of users for filtering/testing.
  */
-function getExpiredCompletions(inputFile, targetDate) {
+function getExpiredCompletions(inputFile, targetDate, users = null) {
     var userBlobs = inputFile;
 
     const expiryFilter = (cBlob, margin = 30) => {
@@ -206,9 +207,10 @@ function getExpiredCompletions(inputFile, targetDate) {
     const strictExpiryFilter = (cBlob) => expiryFilter(cBlob, 0);
 
     let filteredBlobs = userBlobs.filter((uBlob) => {
+        let isInFilter = !Array.isArray(users) || users.includes(uBlob.name);
         // get only people with expired/expiring completions
         let hasExpiredCompletion = uBlob.completions.findIndex(expiryFilter);
-        return hasExpiredCompletion != -1;
+        return isInFilter && hasExpiredCompletion != -1;
     }).map((uBlob) => {
         return {
             name: uBlob.name, // user name
