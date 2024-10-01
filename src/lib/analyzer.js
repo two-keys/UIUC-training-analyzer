@@ -47,9 +47,11 @@ function isAfter(subject, comparedTo, margin = 0) {
     let date2 = new Date(dateStripper(comparedTo));
 
     let marginInMilliseconds = margin * 24 * 60 * 60 * 1000;
-    date1.setTime(date1.getTime() + marginInMilliseconds);
+    let newDate1 = new Date(date1.getTime() + marginInMilliseconds);
 
-    if (date1.getTime() > date2.getTime()) {
+    let isAfterFlag = newDate1.getTime() > date2.getTime();
+    console.log(`${date1.toString()} + margin ${margin}\n ${newDate1} is after ${date2.toString()}: ${isAfterFlag}`);
+    if (isAfterFlag) {
         return true;
     } else {
         return false;
@@ -174,7 +176,7 @@ function getFYCompletions(inputFile, trainings, fiscalYear) {
                 // we only need their names
                 return uBlob.name;
             });
-            console.log(filteredPeople.length);
+            // console.log(filteredPeople.length);
 
             let tempFilterBlob = {
                 name: tBlob.name,
@@ -195,26 +197,28 @@ function getFYCompletions(inputFile, trainings, fiscalYear) {
  * @param {Array<string>} users An optional array of users for filtering/testing.
  */
 function getExpiredCompletions(inputFile, targetDate, users = null) {
+    if(Array.isArray(users) == true)
+        console.log(`${users.toString()} : ${targetDate}`);
     var userBlobs = inputFile;
 
     const expiryFilter = (cBlob, margin = 30) => {
         if(typeof cBlob.expires !== 'undefined' && cBlob.expires != null) {
             // get only people with expired/expiring completions
-            return typeof isAfter(cBlob.expires, targetDate, margin) // 30 day margin
+            return isAfter(targetDate, cBlob.expires, margin) // 30 day margin
         }
         return false;
     }
     const strictExpiryFilter = (cBlob) => expiryFilter(cBlob, 0);
 
     let filteredBlobs = userBlobs.filter((uBlob) => {
-        let isInFilter = !Array.isArray(users) || users.includes(uBlob.name);
+        let isInFilter = (Array.isArray(users) == false) || users.includes(uBlob.name);
         // get only people with expired/expiring completions
-        let hasExpiredCompletion = uBlob.completions.findIndex(expiryFilter);
-        return isInFilter && hasExpiredCompletion != -1;
+        let hasExpiredCompletion = uBlob.completions.findIndex((cBlob) => expiryFilter(cBlob));
+        return isInFilter && (hasExpiredCompletion != -1);
     }).map((uBlob) => {
         return {
             name: uBlob.name, // user name
-            completions: uBlob.completions.filter(expiryFilter).map((cBlob) => {
+            completions: uBlob.completions.filter((cBlob) => expiryFilter(cBlob)).map((cBlob) => {
                 return {
                     name: cBlob.name,
                     status: (strictExpiryFilter(cBlob)) ? 'expired' : 'expires soon'

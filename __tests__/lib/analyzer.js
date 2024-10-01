@@ -141,9 +141,24 @@ describe('Completion count', () => {
 
 describe('Expiration function', () => {
     let answerKey = {
-        '01/01/2001': { 
+        'Jan 1st, 2001': {
             'Antony Sanchez': { count: 0 },
-            'John Doe': { count: 2 },
+            'John Doe': { count: 0 },
+            'Mary Jane': { count: 0 }
+        },
+        'Aug 18th, 2024': {
+            'Antony Sanchez': { count: 0 },
+            'John Doe': { count: 1 }, // expiring soon
+            'Mary Jane': { count: 1 }
+        },
+        'July 19th, 2024': {
+            'Antony Sanchez': { count: 0 },
+            'John Doe': { count: 0 },
+            'Mary Jane': { count: 1 }
+        },
+        'July 20th, 2024': {
+            'Antony Sanchez': { count: 0 },
+            'John Doe': { count: 1 }, // expiring in 30 days
             'Mary Jane': { count: 1 }
         }
     }
@@ -162,8 +177,10 @@ describe('Expiration function', () => {
 
             if (count == 0)
                 expect(expComps.length).toBe(0);
-            else
+            else {
+                expect(expComps.length).toBe(1);
                 expect(expComps[0].completions.length).toBe(count);
+            }
         })
     });
 });
