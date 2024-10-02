@@ -14,6 +14,7 @@ function UploadForm() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        setData([]);
 
         let submitter = e.target.name;
         // console.log(e.target.name);
@@ -75,7 +76,11 @@ function UploadForm() {
             <input type="text" id="targetDate" />
             <button name="getExpiredCompletions" type="submit" onClick={onSubmit}>Get Expirations</button>
             <Divider />
-            <button style={{marginLeft: '2px'}} onClick={downloadData}>Download</button>
+            <button style={{marginLeft: '2px'}} onClick={downloadData}
+                disabled={(data.length > 0) ? false : true}
+            >{
+                (data.length > 0) ? 'Download' : 'Loading...'
+            }</button>
         </form>
     );
 }
