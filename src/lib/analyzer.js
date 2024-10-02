@@ -129,9 +129,11 @@ function getTrainingBlobs(inputFile) {
 
             // update latest index
             let oldTimestampIndex = users[userIndex].latestCompletionIndex;
-            let oldTimestamp = users[userIndex].completions[oldTimestampIndex].timestamp;
+            // console.log(`index ${oldTimestampIndex} -> ${JSON.stringify(users[userIndex].completions)}`);
+            let oldTimestamp = userBlob.completions[oldTimestampIndex].timestamp;
             if (isAfter(cBlob.timestamp, oldTimestamp)) {
                 users[userIndex].latestCompletionIndex = cIndex;
+                // console.log(`${cBlob.timestamp} --- ${oldTimestamp}, ${cIndex}`);
             };
         });
     });

@@ -14,6 +14,9 @@ function UploadForm() {
     const onSubmit = async (e) => {
         e.preventDefault();
 
+        let submitter = e.target.name;
+        console.log(e.target.name);
+
         const fileInput = document.getElementById('jsonFile');
         const file = fileInput.files[0];
         
@@ -21,9 +24,12 @@ function UploadForm() {
 
         reader.onload = (e) => {
             console.log(JSON.parse(e.target?.result));
-            fetch("/api/process", {
+            fetch(`/api/process?mode=${submitter}`, {
                 method: "POST",
-                body: e.target?.result,
+                body: JSON.stringify({ 
+                    mode: submitter,
+                    data: JSON.parse(e.target?.result)
+                }),
             }).then(response => response.json())
                 .then(resData => {
                     console.log(resData);
@@ -40,11 +46,11 @@ function UploadForm() {
     };
 
     return (
-        <form className={styles.form} onSubmit={onSubmit}>
+        <form className={styles.form}>
             <label htmlFor="jsonFile">Upload a .json file... </label>
             <input type="file" id="jsonFile" name="jsonFile" accept=".json, text" />
             <br />
-            <button type="submit">Submit</button>
+            <button name="getCompletionCounts" type="submit" onClick={onSubmit}>Get Completion Counts</button>
             <button style={{marginLeft: '2px'}} onClick={downloadData}>Download</button>
         </form>
     );
