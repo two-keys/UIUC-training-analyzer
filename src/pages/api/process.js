@@ -14,13 +14,16 @@ const serverResp = async (req, res) => {
     
     let mode = reqBody['mode'];
     let data = reqBody['data'];
+    let trainings = reqBody['trainings'];
+    let fiscalYear = reqBody['fiscalYear'];
+
     let resJSON;
     switch (mode) {
         case 'getCompletionCounts':
             resJSON = getCompletionCounts(data);
             break;
         case 'getFYCompletions':
-            resJSON = getFYCompletions(data, )
+            resJSON = getFYCompletions(data, trainings, fiscalYear);
             break;
     
         default:
