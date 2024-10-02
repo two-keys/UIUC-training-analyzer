@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from '../styles/App.module.css';
+import Divider from './Divider';
 
 function UploadForm() {
     const [data, setData] = useState([]);
@@ -24,6 +25,8 @@ function UploadForm() {
             document.getElementById('trainings').value
         ).replace('"', '').split('", "');
         console.log(trainings);
+
+        const fiscalYear = document.getElementById('fiscalYear').value;
         
         const reader = new FileReader();
 
@@ -34,6 +37,7 @@ function UploadForm() {
                 body: JSON.stringify({ 
                     mode: submitter,
                     data: JSON.parse(e.target?.result),
+                    fiscalYear: fiscalYear,
                     trainings: trainings,
                 }),
             }).then(response => response.json())
@@ -55,11 +59,15 @@ function UploadForm() {
         <form className={styles.form}>
             <label htmlFor="jsonFile">Upload a .json file... </label>
             <input type="file" id="jsonFile" name="jsonFile" accept=".json, text" />
-            <br />
+            <Divider />
             <button name="getCompletionCounts" type="submit" onClick={onSubmit}>Get Completion Counts</button>
-            <br />
+            <Divider />
+            <label htmlFor="trainings">Trainings </label>
             <input type="text" id="trainings" />
-            <button name="getFYCompletions" type="submit" onClick={onSubmit}>Get Completion Counts</button>
+            <label htmlFor="fiscalYear">Fiscal Year </label>
+            <input type="text" id="fiscalYear" />
+            <button name="getFYCompletions" type="submit" onClick={onSubmit}>Get Fiscal Year Completions</button>
+            <Divider />
             <button style={{marginLeft: '2px'}} onClick={downloadData}>Download</button>
         </form>
     );
