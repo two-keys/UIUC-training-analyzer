@@ -20,8 +20,7 @@
 
 .title {
   margin: 0 0 1rem;
-  line-height: 1.15;
-  font-size: 3.6rem;
+  font-size: 3.0rem;
 }
 
 .title {
@@ -29,12 +28,11 @@
 }
 
 .title,
-.description {
+.header {
   text-align: center;
 }
 
 .description {
-  line-height: 1.5;
   font-size: 1.5rem;
 }
 
@@ -82,6 +80,12 @@
 
 .logo {
   height: 1em;
+}
+
+.form {
+  text-align: start;
+  margin: auto;
+  width: 50%;
 }
 
 @media (max-width: 600px) {
