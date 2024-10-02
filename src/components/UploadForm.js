@@ -15,10 +15,15 @@ function UploadForm() {
         e.preventDefault();
 
         let submitter = e.target.name;
-        console.log(e.target.name);
+        // console.log(e.target.name);
 
         const fileInput = document.getElementById('jsonFile');
         const file = fileInput.files[0];
+
+        const trainings = (
+            document.getElementById('trainings').value
+        ).replace('"', '').split('", "');
+        console.log(trainings);
         
         const reader = new FileReader();
 
@@ -28,7 +33,8 @@ function UploadForm() {
                 method: "POST",
                 body: JSON.stringify({ 
                     mode: submitter,
-                    data: JSON.parse(e.target?.result)
+                    data: JSON.parse(e.target?.result),
+                    trainings: trainings,
                 }),
             }).then(response => response.json())
                 .then(resData => {
@@ -51,6 +57,9 @@ function UploadForm() {
             <input type="file" id="jsonFile" name="jsonFile" accept=".json, text" />
             <br />
             <button name="getCompletionCounts" type="submit" onClick={onSubmit}>Get Completion Counts</button>
+            <br />
+            <input type="text" id="trainings" />
+            <button name="getFYCompletions" type="submit" onClick={onSubmit}>Get Completion Counts</button>
             <button style={{marginLeft: '2px'}} onClick={downloadData}>Download</button>
         </form>
     );

@@ -50,7 +50,7 @@ function isAfter(subject, comparedTo, margin = 0) {
     let newDate1 = new Date(date1.getTime() + marginInMilliseconds);
 
     let isAfterFlag = newDate1.getTime() > date2.getTime();
-    console.log(`${date1.toString()} + margin ${margin}\n ${newDate1} is after ${date2.toString()}: ${isAfterFlag}`);
+    // console.log(`${date1.toString()} + margin ${margin}\n ${newDate1} is after ${date2.toString()}: ${isAfterFlag}`);
     if (isAfterFlag) {
         return true;
     } else {

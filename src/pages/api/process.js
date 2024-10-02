@@ -10,14 +10,17 @@ const serverResp = async (req, res) => {
     // console.log(req);
 
     let reqBody = JSON.parse(req.body);
-    console.log(req.body);
+    // console.log(req.body);
     
     let mode = reqBody['mode'];
     let data = reqBody['data'];
     let resJSON;
-    switch (mode = 'getCompletionCounts') {
+    switch (mode) {
         case 'getCompletionCounts':
             resJSON = getCompletionCounts(data);
+            break;
+        case 'getFYCompletions':
+            resJSON = getFYCompletions(data, )
             break;
     
         default:
