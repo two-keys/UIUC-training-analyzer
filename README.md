@@ -8,3 +8,6 @@ There are a few assumptions I've made while coding this. These are those assumpt
 1. 'npm install' from project root
 2. 'npm run dev'
 3. open localhost:3000
+
+## Running tests
+1. 'npm run test'
