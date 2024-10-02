@@ -16,6 +16,7 @@ const serverResp = async (req, res) => {
     let data = reqBody['data'];
     let trainings = reqBody['trainings'];
     let fiscalYear = reqBody['fiscalYear'];
+    let targetDate = reqBody['targetDate'];
 
     let resJSON;
     switch (mode) {
@@ -24,6 +25,9 @@ const serverResp = async (req, res) => {
             break;
         case 'getFYCompletions':
             resJSON = getFYCompletions(data, trainings, fiscalYear);
+            break;
+        case 'getExpiredCompletions':
+            resJSON = getExpiredCompletions(data, targetDate);
             break;
     
         default:

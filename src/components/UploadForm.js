@@ -27,6 +27,8 @@ function UploadForm() {
         console.log(trainings);
 
         const fiscalYear = document.getElementById('fiscalYear').value;
+
+        const targetDate = document.getElementById('targetDate').value;
         
         const reader = new FileReader();
 
@@ -39,6 +41,7 @@ function UploadForm() {
                     data: JSON.parse(e.target?.result),
                     fiscalYear: fiscalYear,
                     trainings: trainings,
+                    targetDate: targetDate
                 }),
             }).then(response => response.json())
                 .then(resData => {
@@ -67,6 +70,10 @@ function UploadForm() {
             <label htmlFor="fiscalYear">Fiscal Year </label>
             <input type="text" id="fiscalYear" />
             <button name="getFYCompletions" type="submit" onClick={onSubmit}>Get Fiscal Year Completions</button>
+            <Divider />
+            <label htmlFor="targetDate">Target Date </label>
+            <input type="text" id="targetDate" />
+            <button name="getExpiredCompletions" type="submit" onClick={onSubmit}>Get Expirations</button>
             <Divider />
             <button style={{marginLeft: '2px'}} onClick={downloadData}>Download</button>
         </form>
